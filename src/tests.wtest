@@ -1,0 +1,19 @@
+import estudiante.*
+import materia.*
+import materiaAprobada.*
+import carrera.*
+describe "Registrar materia aprobada"{
+    const objI = new Materia(nombreM = "Objetos I", requisitos = #{})
+    const objII = new Materia(nombreM = "Objetos II", requisitos = #{})
+    const objIII = new Materia(nombreM = "Objetos III", requisitos = #{})
+    const tpFinal = new Materia(nombreM = "Trabajo Final", requisitos = #{})
+    const mateI = new Materia(nombreM = "Mate I", requisitos = #{})
+    const bbdd = new Materia(nombreM = "Bases de Datos", requisitos = #{})
+    const elemDeProg = new Materia(nombreM = "Elementos de Programacion", requisitos = #{})
+    const programacion = new Carrera(nombreC = "Programacion", materias = materias.add(elemDeProg, mateI, objI, objII, objIII, tpFinal, bbdd))
+    const Juan = new Estudiante (nombreE = "Juan", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7)}, carreras = {programacion})
+
+    test "ugh"{
+        
+    }
+}
