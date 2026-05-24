@@ -1,0 +1,21 @@
+{
+  "name": "26s1c4-inscripcionmaterias-estebanlozi",
+  "version": "1.0.0",
+  "description": "Queremos implementar un sistema que permita realizar la inscripción a materias de una Universidad. Ojo, prestar bien atención a las reglas del dominio, que pueden no ser exactamente iguales a las de tu universidad.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obj1unq/26s1c4-inscripcionmaterias-EstebanLozi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/obj1unq/26s1c4-inscripcionmaterias-EstebanLozi/issues"
+  },
+  "homepage": "https://github.com/obj1unq/26s1c4-inscripcionmaterias-EstebanLozi#readme"
+}

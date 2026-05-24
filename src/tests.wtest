@@ -3,17 +3,42 @@ import materia.*
 import materiaAprobada.*
 import carrera.*
 describe "Registrar materia aprobada"{
-    const objI = new Materia(nombreM = "Objetos I", requisitos = #{})
-    const objII = new Materia(nombreM = "Objetos II", requisitos = #{})
-    const objIII = new Materia(nombreM = "Objetos III", requisitos = #{})
-    const tpFinal = new Materia(nombreM = "Trabajo Final", requisitos = #{})
-    const mateI = new Materia(nombreM = "Mate I", requisitos = #{})
-    const bbdd = new Materia(nombreM = "Bases de Datos", requisitos = #{})
-    const elemDeProg = new Materia(nombreM = "Elementos de Programacion", requisitos = #{})
-    const programacion = new Carrera(nombreC = "Programacion", materias = materias.add(elemDeProg, mateI, objI, objII, objIII, tpFinal, bbdd))
-    const Juan = new Estudiante (nombreE = "Juan", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7)}, carreras = {programacion})
+    const objI         = new Materia(nombreM = "Objetos I",                 requisitos = #{})
+    const objII        = new Materia(nombreM = "Objetos II",                requisitos = #{mateI, objI}, cupos = 3)
+    const objIII       = new Materia(nombreM = "Objetos III",               requisitos = #{objII, bbdd})
+    const progCon      = new Materia(nombreM = "Programacion Concurrente",  requisitos = #{objI, bbdd})
+    const tpFinal      = new Materia(nombreM = "Trabajo Final",             requisitos = #{})
+    const mateI        = new Materia(nombreM = "Mate I",                    requisitos = #{})
+    const bbdd         = new Materia(nombreM = "Bases de Datos",            requisitos = #{})
+    const elemDeProg   = new Materia(nombreM = "Elementos de Programacion", requisitos = #{})
+    const programacion = new Carrera(nombreC = "Programacion", materias = #{elemDeProg, mateI, objI, objII, objIII, tpFinal, bbdd, progCon})
+    const bioI         = new Materia(nombreM = "Biologia 1", requisitos = #{})
+    const bioII        = new Materia(nombreM = "Biologia 2", requisitos = #{bioI})
+    const quimica      = new Materia(nombreM = "Quimica",    requisitos = #{})
+    const roque        = new Estudiante(nombreE = "Roque",  materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9), new MateriaAprobada(materia = bbdd, nota = 10), new MateriaAprobada(materia = bioI, nota = 10), new MateriaAprobada(materia = quimica, nota = 6)}, carreras = #{programacion})
+    const luisa        = new Estudiante(nombreE = "Luisa",  materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
+    const romina       = new Estudiante(nombreE = "Romina", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
+    const alicia       = new Estudiante(nombreE = "Alicia", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
+    const ana          = new Estudiante(nombreE = "Ana",    materiasAprobadas = #{new MateriaAprobada(materia = elemDeProg, nota = 9)})
 
-    test "ugh"{
-        
+    test "Si es de la carrera"{
+        assert.that(roque.carreras().any({carrera => carrera.esDeLaCarrera(objI)}))
+    }
+    test "No esta aprobada"{
+        assert.that(not(roque.aprobo(objII)))
+    }
+    test "No esta inscripto"{
+        assert.that(not(roque.inscripto().any({inscripcion => inscripcion == objII})))
+    }
+    test "Cumple los requisitos"{
+        assert.that(objII.requisitos().all({_materia => roque.aprobo(_materia)}))
+    }
+    test "Test punto uno"{
+        roque.inscribir(objII)
+        assert.that(roque.inscripto().any({inscripcion => inscripcion == objII}))
+    }
+    test "Inscripcion a Objetos III"{
+        roque.inscribir(objIII)
+        assert.equals(false, roque.inscripto().any({materia => materia == objIII}))
     }
 }

@@ -18,12 +18,18 @@ class Estudiante{
     }
     method cantMateriasAprobadas() = materiasAprobadas.size()
     method promedioNota() {
-        var promedio
-        return materiasAprobadas.foreach({materiaAprobada => promedio = promedio + materiaAprobada.nota()}) / self.cantMateriasAprobadas()
+        return materiasAprobadas.fold(0, {promedio, materiaAprobada => promedio + materiaAprobada.nota()}) / self.cantMateriasAprobadas()
     }
     method inscribir(materia){
-        if (carreras.any({carrera => carrera.esDeLaCarrera(materia)}) && not(self.aprobo(materia)) && inscripto.any({inscripcion => inscripcion == materia})){
+        if (carreras.any({carrera => carrera.esDeLaCarrera(materia)}) && 
+            not(self.aprobo(materia)) && 
+            not(inscripto.any({inscripcion => inscripcion == materia})) &&
+            materia.requisitos().all({_materia => self.aprobo(_materia)}) &&
+            materia.cupos() > 0){
             inscripto.add(materia)
+            materia.cupos(materia.cupos()-1)
+        }else{
+            // Falta agregar el error
         }
     }
     method aproboRequisitos(materia){
