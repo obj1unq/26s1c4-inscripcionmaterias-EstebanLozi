@@ -2,6 +2,7 @@ import estudiante.*
 import materia.*
 import materiaAprobada.*
 import carrera.*
+import inscripto.*
 describe "Registrar materia aprobada"{
     const objI         = new Materia(nombreM = "Objetos I",                 requisitos = #{})
     const objII        = new Materia(nombreM = "Objetos II",                requisitos = #{mateI, objI}, cupos = 3)
@@ -12,14 +13,19 @@ describe "Registrar materia aprobada"{
     const bbdd         = new Materia(nombreM = "Bases de Datos",            requisitos = #{})
     const elemDeProg   = new Materia(nombreM = "Elementos de Programacion", requisitos = #{})
     const programacion = new Carrera(nombreC = "Programacion", materias = #{elemDeProg, mateI, objI, objII, objIII, tpFinal, bbdd, progCon})
-    const bioI         = new Materia(nombreM = "Biologia 1", requisitos = #{})
-    const bioII        = new Materia(nombreM = "Biologia 2", requisitos = #{bioI})
-    const quimica      = new Materia(nombreM = "Quimica",    requisitos = #{})
-    const roque        = new Estudiante(nombreE = "Roque",  materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9), new MateriaAprobada(materia = bbdd, nota = 10), new MateriaAprobada(materia = bioI, nota = 10), new MateriaAprobada(materia = quimica, nota = 6)}, carreras = #{programacion})
-    const luisa        = new Estudiante(nombreE = "Luisa",  materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
-    const romina       = new Estudiante(nombreE = "Romina", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
-    const alicia       = new Estudiante(nombreE = "Alicia", materiasAprobadas = #{new MateriaAprobada(materia = mateI, nota = 7), new MateriaAprobada(materia = objI, nota = 8), new MateriaAprobada(materia = elemDeProg, nota = 9)})
-    const ana          = new Estudiante(nombreE = "Ana",    materiasAprobadas = #{new MateriaAprobada(materia = elemDeProg, nota = 9)})
+    const bioI         = new Materia(nombreM = "Biologia 1",       requisitos = #{})
+    const bioII        = new Materia(nombreM = "Biologia 2",       requisitos = #{bioI})
+    const quimica      = new Materia(nombreM = "Quimica",          requisitos = #{})
+    const anatomia     = new Materia(nombreM = "Anatomia General", requisitos = #{})
+    const medicina     = new Carrera(nombreC = "Medicina", materias = #{bioI, bioII, quimica, anatomia})
+    const mateINota    = new MateriaAprobada(materia = mateI,       nota = 7)
+    const objINota     = new MateriaAprobada(materia = objI,        nota = 9)
+    const elemNota     = new MateriaAprobada(materia = elemDeProg,  nota = 8)
+    const luisa        = new Estudiante(nombreE = "Luisa",  materiasAprobadas = #{mateINota, objINota, elemNota})
+    const romina       = new Estudiante(nombreE = "Romina", materiasAprobadas = #{mateINota, objINota, elemNota})
+    const alicia       = new Estudiante(nombreE = "Alicia", materiasAprobadas = #{mateINota, objINota, elemNota})
+    const roque        = new Estudiante(nombreE = "Roque",  materiasAprobadas = #{mateINota, objINota, elemNota, new MateriaAprobada(materia = bbdd, nota = 10), new MateriaAprobada(materia = bioI, nota = 10), new MateriaAprobada(materia = quimica, nota = 6)}, carreras = #{programacion, medicina})
+    const ana          = new Estudiante(nombreE = "Ana",    materiasAprobadas = #{elemNota})
 
     test "Si es de la carrera"{
         assert.that(roque.carreras().any({carrera => carrera.esDeLaCarrera(objI)}))
@@ -33,12 +39,22 @@ describe "Registrar materia aprobada"{
     test "Cumple los requisitos"{
         assert.that(objII.requisitos().all({_materia => roque.aprobo(_materia)}))
     }
-    test "Test punto uno"{
+    test "Roque a Objetos I"{
+        assert.throwsException({roque.inscribir(objI)})
+    }
+    test "Roque a Objetos II"{
         roque.inscribir(objII)
         assert.that(roque.inscripto().any({inscripcion => inscripcion == objII}))
     }
-    test "Inscripcion a Objetos III"{
-        roque.inscribir(objIII)
-        assert.equals(false, roque.inscripto().any({materia => materia == objIII}))
+    test "Roque a Objetos III"{
+        assert.throwsException({roque.inscribir(objIII)})
+    }
+
+    test "Anotando varios a Objetos II"{
+        luisa.inscribir(objII)              // Esto no funciona, falta arreglar
+        romina.inscribir(objII)
+        alicia.inscribir(objII)
+        roque.inscribir(objII)
+        assert.equals(#{roque}, inscriptos.estsEnEspPorMateria().get(objII)) 
     }
 }

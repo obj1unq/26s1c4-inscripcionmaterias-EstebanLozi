@@ -1,5 +1,8 @@
 import estudiante.*
 class MateriaAprobada{
-    var property materia
-    var property nota
+    const materia
+    const nota
+
+    method materia() = materia
+    method nota() = nota
 }
