@@ -1,13 +1,15 @@
 import materiaAprobada.*
 import materia.*
-import inscripto.*
+import inscripcionesPorMateria.*
 class Estudiante{
     const nombreE
     var property carreras = #{}
-    var materiasAprobadas = #{}
-    var property inscripto = #{}
+    const materiasAprobadas = #{}
+    var property materiasInscripto = #{}
+    var property creditos = 0
 
     method nombreE() = nombreE
+    method materiasAprobadas() = materiasAprobadas
     method aprobar(materia, nota) {
       if (self.aprobo(materia)){
         self.error("Ya esta aprobada")
@@ -29,19 +31,28 @@ class Estudiante{
             self.error("No se puede anotar")
         }
         if (self.puedeInscribirse(materia) && materia.tieneCupos()){
-            inscripto.add(materia)
-            inscriptos.agregarInscripcion(materia,self)
+            materiasInscripto.add(materia)
+            inscripcionesPorMateria.agregarInscripcion(materia,self)
             materia.cupos(materia.cupos()-1)
-        }else inscriptos.agregarAEspera(materia,self)
+        }else inscripcionesPorMateria.agregarAEspera(materia,self)
     }
     method puedeInscribirse(materia){
         return (carreras.any({carrera => carrera.esDeLaCarrera(materia)}) && 
             not(self.aprobo(materia)) && 
-            not(inscripto.any({inscripcion => inscripcion == materia})) &&
-            materia.requisitos().all({_materia => self.aprobo(_materia)}))
+            not(materiasInscripto.any({inscripcion => inscripcion == materia})) &&
+            materia.requisitosM().all({_materia => self.aprobo(_materia)}) && materia.requisitosC() <= creditos)
     }
     method darDeBaja(materia){ // No se si funciona, me falta testear
-        inscripto.remove(materia)
-        inscriptos.anotarAlPrimeroEsperando(materia)
+        if (materiasInscripto.any({_materia => _materia == materia})){
+            materiasInscripto.remove(materia)
+            inscripcionesPorMateria.anotarAlPrimeroEsperando(self, materia)
+        }
     }
+    method enListaDeEspera(){
+        return inscripcionesPorMateria.enEspera().fold(#{}, {enEspera, materia => if (materia.contains(self)) enEspera.add(materia)}) // Falta testear
+    }   
+    method lasQuePuedeInscribirse(carrera){
+        return carrera.materias().fold(#{}, {lasQueSePuedeInscribir, materia => if (self.puedeInscribirse(materia)) lasQueSePuedeInscribir.add(materia)}) // Falta testear
+    }
+
 }
