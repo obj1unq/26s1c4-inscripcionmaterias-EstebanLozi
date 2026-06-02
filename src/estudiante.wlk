@@ -2,13 +2,10 @@ import materiaAprobada.*
 import materia.*
 import inscripcionesPorMateria.*
 class Estudiante{
-    const nombreE
     var property carreras = #{}
     const materiasAprobadas = #{}
     var property materiasInscripto = #{}
     var property creditos = 0
-
-    method nombreE() = nombreE
     method materiasAprobadas() = materiasAprobadas
     method aprobar(materia, nota) {
       if (self.aprobo(materia)){
