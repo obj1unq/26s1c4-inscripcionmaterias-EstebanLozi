@@ -1,0 +1,73 @@
+import estudiante.*
+import materia.*
+import materiaAprobada.*
+import carrera.*
+import inscripcionesPorMateria.*
+describe "Registrar materia aprobada"{
+    const objI         = new Materia()
+    const objII        = new Materia(requisitosM = #{mateI, objI}, cupos = 3)
+    const objIII       = new Materia(requisitosM = #{objII, bbdd})
+    const progCon      = new Materia(requisitosM = #{objI, bbdd})
+    const tpFinal      = new Materia(requisitosC = 250)
+    const mateI        = new Materia()
+    const bbdd         = new Materia()
+    const elemDeProg   = new Materia()
+    const programacion = new Carrera(materias = #{elemDeProg, mateI, objI, objII, objIII, tpFinal, bbdd, progCon})
+    const bioI         = new Materia()
+    const bioII        = new Materia(requisitosM = #{bioI})
+    const quimica      = new Materia()
+    const anatomia     = new Materia()
+    const medicina     = new Carrera(materias = #{bioI, bioII, quimica, anatomia})
+    const mateINota    = new MateriaAprobada(materia = mateI,       nota = 7)
+    const objINota     = new MateriaAprobada(materia = objI,        nota = 9)
+    const elemNota     = new MateriaAprobada(materia = elemDeProg,  nota = 8)
+    const luisa        = new Estudiante(materiasAprobadas = #{mateINota, objINota, elemNota}, carreras = #{programacion})
+    const romina       = new Estudiante(materiasAprobadas = #{mateINota, objINota, elemNota}, carreras = #{programacion})
+    const alicia       = new Estudiante(materiasAprobadas = #{mateINota, objINota, elemNota}, carreras = #{programacion})
+    const roque        = new Estudiante(creditos = 250, materiasAprobadas = #{mateINota, objINota, elemNota, new MateriaAprobada(materia = bbdd, nota = 10), new MateriaAprobada(materia = bioI, nota = 10), new MateriaAprobada(materia = quimica, nota = 6)}, carreras = #{programacion, medicina})
+    const ana          = new Estudiante(materiasAprobadas = #{mateINota, objINota, elemNota}, carreras = #{programacion})
+
+    test "Si es de la carrera"{
+        assert.that(roque.carreras().any({carrera => carrera.esDeLaCarrera(objI)}))
+    }
+    test "No esta aprobada"{
+        assert.that(not(roque.aprobo(objII)))
+    }
+    test "No esta inscripto"{
+        assert.that(not(roque.materiasInscripto().any({inscripcion => inscripcion == objII})))
+    }
+    test "Cumple los requisitos"{
+        assert.that(objII.requisitosM().all({_materia => roque.aprobo(_materia)}))
+    }
+    test "Roque a Objetos I"{
+        assert.throwsException({roque.inscribir(objI)})
+    }
+    test "Roque a Objetos II"{
+        roque.inscribir(objII)
+        assert.that(roque.materiasInscripto().any({inscripcion => inscripcion == objII}))
+    }
+    test "Roque a Objetos III"{
+        assert.throwsException({roque.inscribir(objIII)})
+    }
+
+    test "Anotando varios a Objetos II"{
+        luisa.inscribir (objII)
+        romina.inscribir(objII)
+        alicia.inscribir(objII)
+        roque.inscribir (objII)
+        assert.equals([roque], inscripcionesPorMateria.enEspera().get(objII))
+    }
+    test "Desinscribiendo a Romina"{
+        luisa.inscribir (objII)
+        romina.inscribir(objII)
+        alicia.inscribir(objII)
+        roque.inscribir (objII)
+        assert.equals([roque], inscripcionesPorMateria.enEspera().get(objII))
+        ana.inscribir(objII) // La agregue para asegurarme que tome a Roque por ser el primero de la lista de espera y no por ser el unico
+        romina.darDeBaja(objII)
+        assert.equals([ana], inscripcionesPorMateria.enEspera().get(objII))
+    }
+    test "Probando creditos"{
+        assert.that(roque.puedeInscribirse(tpFinal))
+    }
+}

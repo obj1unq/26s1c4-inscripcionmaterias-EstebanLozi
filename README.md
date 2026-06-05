@@ -22,33 +22,33 @@ Implementar un modelo que permita resolver los siguientes **requerimientos**.
     > **Tip**:   
     La nota con la que un estudiante aprobó una materia, no puede ser atributo del estudiante (porque un estudiante tiene muchas notas) ni de la materia (porque una materia tiene muchos estudiantes y cada uno tiene su nota). Entonces se necesita un objeto que represente "Juan Pérez aprobó Objetos 1 con 7", que es distinto tanto al objeto que representa a Juán Pérez como al objeto que representa a la materia Objetos 1.
 
-1. Saber para un estudiante: si tiene o no aprobada una materia, la cantidad de materias aprobadas, el promedio.
+2. Saber para un estudiante: si tiene o no aprobada una materia, la cantidad de materias aprobadas, el promedio.
 
-1. Saber para un estudiante: la colección de materias de **todas** las carreras a las que está inscripto. P.ej. para Roque debe incluir todas las de programación y también todas las de medicina.  
+3. Saber para un estudiante: la colección de materias de **todas** las carreras a las que está inscripto. P.ej. para Roque debe incluir todas las de programación y también todas las de medicina.  
 _Sugerencia_: mirar el método `flatten`, p.ej. probar `[[3,4],[6,8,2]].flatten()`. 
 
-1. Determinar si un estudiante puede inscribirse a una materia. Para esto se deben cumplir cuatro condiciones: 
+4. Determinar si un estudiante puede inscribirse a una materia. Para esto se deben cumplir cuatro condiciones: 
     - la materia debe corresponder a alguna de las carreras que esté cursando el estudiante, 
     - el estudiante no puede haber aprobado la materia previamente, 
     - el estudiante no debe estar estar ya inscripto en esa materia,
     - el estudiante debe tener aprobadas todas las materias que se declaran como _requisitos_ de la materia a la que se quiere inscribir.  
     P.ej., para que un estudiante pueda inscribirse a Objetos 2, es necesario tener aprobadas Objetos 1 y Matemática 1.
 
-1. Inscribir un estudiante a una materia, verificando las condiciones de inscripción de la materia. Si no se cumplen las condiciones, lanzar un error.  
+5. Inscribir un estudiante a una materia, verificando las condiciones de inscripción de la materia. Si no se cumplen las condiciones, lanzar un error.  
 Además, cada materia tiene un “cupo”, es decir, una cantidad máxima de estudiantes que se pueden inscribir. Para manejar el exceso en los cupos, las materias tienen una lista de espera, de estudiantes que quisieran cursar pero no tienen lugar 
 (ver punto 5).
 O sea, como resultado de la inscripción, el estudiante puede, o bien quedar confirmado, o bien quedar en lista de espera.  
 No se requiere que el sistema conteste nada con respecto al resultado de la inscripción. 
 
-1. Dar de baja un estudiante de una materia. En caso de haber estudiantes en lista de espera, el primer estudiante de la lista debe obtener su lugar en la materia.
+6. Dar de baja un estudiante de una materia. En caso de haber estudiantes en lista de espera, el primer estudiante de la lista debe obtener su lugar en la materia.
 
-1. Brindar resultados de inscripción, específicamente:
+7. Brindar resultados de inscripción, específicamente:
     * Los estudiantes inscriptos a una materia dada.
     * Los estudiantes en lista de espera para una materia dada.
 
-1. Brindar información útil para une estudiante, específicamente: las materias en las que está inscripto, las materias en las que quedó en lista de espera. Para esto, usar la lista de todas las materias de las carreras que cursa, resuelto en un punto anterior.
+8. Brindar información útil para un estudiante, específicamente: las materias en las que está inscripto, las materias en las que quedó en lista de espera. Para esto, usar la lista de todas las materias de las carreras que cursa, resuelto en un punto anterior.
 
-1. Más información sobre une estudiante: dada una carrera, conocer todas las materias de esa carrera a las que se puede inscribir. Sólo vale si el estudiante está cursando esa carrera.  
+9. Más información sobre un estudiante: dada una carrera, conocer todas las materias de esa carrera a las que se puede inscribir. Sólo vale si el estudiante está cursando esa carrera.  
 
 # Tests 
 Suponiendo que
